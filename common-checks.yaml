@@ -1,0 +1,121 @@
+Resources:
+
+##### S3 #####
+  S3BucketPublicReadProhibited:
+    Type: AWS::Config::ConfigRule
+    Properties:
+      ConfigRuleName: S3BucketPublicReadProhibited
+      Description: >- 
+        Checks that your Amazon S3 buckets do not allow public read access.
+        The rule checks the Block Public Access settings, the bucket policy, 
+        and the bucket access control list (ACL).
+      Scope:
+        ComplianceResourceTypes:
+        - AWS::S3::Bucket
+      Source:
+        Owner: AWS
+        SourceIdentifier: S3_BUCKET_PUBLIC_READ_PROHIBITED
+      MaximumExecutionFrequency: Six_Hours
+  S3BucketPublicWriteProhibited: 
+    Type: AWS::Config::ConfigRule
+    Properties: 
+      ConfigRuleName: S3BucketPublicWriteProhibited
+      Description: >- 
+        Checks that your Amazon S3 buckets do not allow public write access. 
+        The rule checks the Block Public Access settings, the bucket policy, 
+        and the bucket access control list (ACL)."
+      Scope: 
+        ComplianceResourceTypes: 
+        - AWS::S3::Bucket
+      Source: 
+        Owner: AWS
+        SourceIdentifier: S3_BUCKET_PUBLIC_WRITE_PROHIBITED
+      MaximumExecutionFrequency: Six_Hours
+
+##### EC2 #####
+  Ec2InstanceNoPublicIp:
+    Properties:
+      ConfigRuleName: ec2-instance-no-public-ip
+      Scope:
+        ComplianceResourceTypes:
+        - AWS::EC2::Instance
+      Source:
+        Owner: AWS
+        SourceIdentifier: EC2_INSTANCE_NO_PUBLIC_IP
+    Type: AWS::Config::ConfigRule
+  InstancesInVpc:
+    Properties:
+      ConfigRuleName: ec2-instances-in-vpc
+      Scope:
+        ComplianceResourceTypes:
+        - AWS::EC2::Instance
+      Source:
+        Owner: AWS
+        SourceIdentifier: INSTANCES_IN_VPC
+    Type: AWS::Config::ConfigRule
+  VpcSgOpenOnlyToAuthorizedPorts:
+    Properties:
+      ConfigRuleName: vpc-sg-open-only-to-authorized-ports
+      InputParameters:
+        authorizedTcpPorts: 25,80,443           
+      Scope:
+        ComplianceResourceTypes:
+        - AWS::EC2::SecurityGroup
+      Source:
+        Owner: AWS
+        SourceIdentifier: VPC_SG_OPEN_ONLY_TO_AUTHORIZED_PORTS
+    Type: AWS::Config::ConfigRule    
+
+##### Load Balancers #####
+  AlbHttpToHttpsRedirectionCheck:
+    Properties:
+      ConfigRuleName: alb-http-to-https-redirection-check
+      Source:
+        Owner: AWS
+        SourceIdentifier: ALB_HTTP_TO_HTTPS_REDIRECTION_CHECK
+    Type: AWS::Config::ConfigRule
+  ElbTlsHttpsListenersOnly:
+    Properties:
+      ConfigRuleName: elb-tls-https-listeners-only
+      Scope:
+        ComplianceResourceTypes:
+        - AWS::ElasticLoadBalancing::LoadBalancer
+      Source:
+        Owner: AWS
+        SourceIdentifier: ELB_TLS_HTTPS_LISTENERS_ONLY
+    Type: AWS::Config::ConfigRule  
+    MaximumExecutionFrequency: One_Hour
+
+##### Lambda #####
+  LambdaFunctionPublicAccessProhibited:
+    Properties:
+      ConfigRuleName: lambda-function-public-access-prohibited
+      Scope:
+        ComplianceResourceTypes:
+        - AWS::Lambda::Function
+      Source:
+        Owner: AWS
+        SourceIdentifier: LAMBDA_FUNCTION_PUBLIC_ACCESS_PROHIBITED
+    Type: AWS::Config::ConfigRule
+  LambdaInsideVpc:
+    Properties:
+      ConfigRuleName: lambda-inside-vpc
+      Scope:
+        ComplianceResourceTypes:
+        - AWS::Lambda::Function
+      Source:
+        Owner: AWS
+        SourceIdentifier: LAMBDA_INSIDE_VPC
+    Type: AWS::Config::ConfigRule
+
+##### API Gateway #####    
+  ApiGwSslEnabled:
+    Properties:
+      ConfigRuleName: api-gw-ssl-enabled
+      Scope:
+        ComplianceResourceTypes:
+        - AWS::ApiGateway::Stage
+      Source:
+        Owner: AWS
+        SourceIdentifier: API_GW_SSL_ENABLED
+    Type: AWS::Config::ConfigRule
